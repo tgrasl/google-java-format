@@ -23,16 +23,17 @@ repositories {
 }
 
 ext {
-  googleJavaFormatVersion = '1.7'
+  googleJavaFormatVersion = '1.7-NETS-SNAPSHOT'
 }
 
+apply plugin: 'idea'
 apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 
 intellij {
   pluginName = "google-java-format"
   updateSinceUntilBuild = true
-  version = "191.5849.21"
+  version = "IC-2018.3"
 }
 
 patchPluginXml {
@@ -42,9 +43,6 @@ patchPluginXml {
   sinceBuild = '173'
 }
 
-publishPlugin {
-  token = project.ext.properties.jetbrainsPluginRepoToken
-}
 
 sourceSets {
   main {

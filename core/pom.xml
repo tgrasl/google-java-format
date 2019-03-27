@@ -22,7 +22,7 @@
   <parent>
     <groupId>com.google.googlejavaformat</groupId>
     <artifactId>google-java-format-parent</artifactId>
-    <version>1.7-SNAPSHOT</version>
+    <version>1.7-NETS-SNAPSHOT</version>
   </parent>
 
   <artifactId>google-java-format</artifactId>
@@ -53,7 +53,6 @@
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotations</artifactId>
-      <optional>true</optional>
     </dependency>
 
 
@@ -83,9 +82,9 @@
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
-          <encoding>UTF-8</encoding>
-          <docencoding>UTF-8</docencoding>
-          <charset>UTF-8</charset>
+          <encoding>ISO-8859-1</encoding>
+          <docencoding>ISO-8859-1</docencoding>
+          <charset>ISO-8859-1</charset>
           <links>
             <link>https://google.github.io/guava/releases/${guava.version}/api/docs/</link>
             <link>https://javadoc.io/page/com.google.code.findbugs/jsr305/${jsr305.version}/</link>
