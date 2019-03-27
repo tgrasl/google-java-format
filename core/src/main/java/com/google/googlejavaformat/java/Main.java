@@ -14,11 +14,10 @@
 
 package com.google.googlejavaformat.java;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.google.common.io.ByteStreams;
 import com.google.googlejavaformat.FormatterDiagnostic;
 import com.google.googlejavaformat.java.JavaFormatterOptions.Style;
+
 import java.io.IOError;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,6 +33,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /** The main class for the Java formatter CLI. */
 public final class Main {
@@ -121,7 +123,7 @@ public final class Main {
       Path path = Paths.get(fileName);
       String input;
       try {
-        input = new String(Files.readAllBytes(path), UTF_8);
+        input = new String(Files.readAllBytes(path), ISO_8859_1);
         inputs.put(path, input);
         results.put(
             path, executorService.submit(new FormatFileCallable(parameters, input, options)));
@@ -161,7 +163,7 @@ public final class Main {
           continue; // preserve original file
         }
         try {
-          Files.write(path, formatted.getBytes(UTF_8));
+          Files.write(path, formatted.getBytes(ISO_8859_1));
         } catch (IOException e) {
           errWriter.println(path + ": could not write file: " + e.getMessage());
           allOk = false;
