@@ -56,8 +56,8 @@ public class SnippetFormatter {
     }
   }
 
-  private static final int INDENTATION_SIZE = 2;
-  private final Formatter formatter = new Formatter();
+  private static final int INDENTATION_SIZE = 4;
+  private final Formatter formatter = new Formatter(JavaFormatterOptions.builder().style(JavaFormatterOptions.Style.AOSP).build());
   private static final CharMatcher NOT_WHITESPACE = CharMatcher.whitespace().negate();
 
   public String createIndentationString(int indentationLevel) {

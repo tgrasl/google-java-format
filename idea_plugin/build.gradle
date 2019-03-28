@@ -31,9 +31,9 @@ apply plugin: 'org.jetbrains.intellij'
 apply plugin: 'java'
 
 intellij {
-  pluginName = "google-java-format"
+  pluginName = "google-java-format-nets"
   updateSinceUntilBuild = true
-  version = "IC-2018.3"
+  version = "191.5849.21"
 }
 
 patchPluginXml {

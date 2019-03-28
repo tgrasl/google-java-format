@@ -17,8 +17,6 @@ package com.google.googlejavaformat.java;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Range;
 import com.google.googlejavaformat.java.SnippetFormatter.SnippetKind;
-import java.util.ArrayList;
-import java.util.List;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.formatter.CodeFormatter;
 import org.eclipse.jface.text.IRegion;
@@ -27,10 +25,13 @@ import org.eclipse.text.edits.MultiTextEdit;
 import org.eclipse.text.edits.ReplaceEdit;
 import org.eclipse.text.edits.TextEdit;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /** Runs the Google Java formatter on the given code. */
 public class GoogleJavaFormatter extends CodeFormatter {
 
-  private static final int INDENTATION_SIZE = 2;
+  private static final int INDENTATION_SIZE = 4;
 
   @Override
   public TextEdit format(
