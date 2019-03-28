@@ -1,4 +1,4 @@
-Custom version for nets project.
+Custom version for nets project. The relevant changes are in the branch *nets-custom*
 
 # google-java-format
 
