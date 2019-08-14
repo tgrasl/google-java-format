@@ -15,7 +15,7 @@ Custom version for nets project. The relevant changes are in the branch *nets-cu
 and run it with:
 
 ```
-java -jar /path/to/google-java-format-1.6-all-deps.jar <options> [files...]
+java -jar /path/to/google-java-format-1.7-all-deps.jar <options> [files...]
 ```
 
 The formatter can act on whole files, on limited lines (`--lines`), on specific
@@ -29,11 +29,13 @@ To reformat changed lines in a specific patch, use
 formatting. This is a deliberate design decision to unify our code formatting on
 a single format.*
 
-### IntelliJ
+### IntelliJ, Android Studio, and other JetBrains IDEs
 
 A
 [google-java-format IntelliJ plugin](https://plugins.jetbrains.com/plugin/8527)
-is available from the plugin repository.
+is available from the plugin repository. To install it, go to your IDE's
+settings and select the `Plugins` category. Click the `Marketplace` tab, search
+for the `google-java-format` plugin, and click the `Install` button.
 
 The plugin will be disabled by default. To enable it in the current project, go
 to `File→Settings...→google-java-format Settings` (or `IntelliJ
@@ -72,10 +74,10 @@ Implementation`.
     *   [sherter/google-java-format-gradle-plugin](https://github.com/sherter/google-java-format-gradle-plugin)
 *   Apache Maven plugins
     *   [coveo/fmt-maven-plugin](https://github.com/coveo/fmt-maven-plugin)
-    *   [talios/googleformatter-maven-plugin](https://github.com/talios/googleformatter-maven-plugin):
-*   [Cosium/maven-git-code-format](https://github.com/Cosium/maven-git-code-format):
-    A maven plugin that automatically deploys google-java-format as a pre-commit
-    git hook.
+    *   [talios/googleformatter-maven-plugin](https://github.com/talios/googleformatter-maven-plugin)
+    *   [Cosium/maven-git-code-format](https://github.com/Cosium/maven-git-code-format):
+        A maven plugin that automatically deploys google-java-format as a
+        pre-commit git hook.
 *   [maltzj/google-style-precommit-hook](https://github.com/maltzj/google-style-precommit-hook):
     A pre-commit (pre-commit.com) hook that will automatically run GJF whenever
     you commit code to your repository
@@ -92,7 +94,7 @@ configuration.
 <dependency>
   <groupId>com.google.googlejavaformat</groupId>
   <artifactId>google-java-format</artifactId>
-  <version>1.6</version>
+  <version>1.7</version>
 </dependency>
 ```
 
@@ -100,7 +102,7 @@ configuration.
 
 ```groovy
 dependencies {
-  compile 'com.google.googlejavaformat:google-java-format:1.6'
+  compile 'com.google.googlejavaformat:google-java-format:1.7'
 }
 ```
 

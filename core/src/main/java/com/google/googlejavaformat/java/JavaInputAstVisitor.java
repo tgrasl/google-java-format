@@ -29,6 +29,7 @@ import static com.google.googlejavaformat.java.Trees.getStartPosition;
 import static com.google.googlejavaformat.java.Trees.operatorName;
 import static com.google.googlejavaformat.java.Trees.precedence;
 import static com.google.googlejavaformat.java.Trees.skipParen;
+import static java.util.stream.Collectors.toList;
 import static org.openjdk.source.tree.Tree.Kind.ANNOTATION;
 import static org.openjdk.source.tree.Tree.Kind.ARRAY_ACCESS;
 import static org.openjdk.source.tree.Tree.Kind.ASSIGNMENT;
@@ -346,6 +347,7 @@ public final class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       builder.forcedBreak();
       first = false;
     }
+    dropEmptyDeclarations();
     if (!node.getImports().isEmpty()) {
       if (!first) {
         builder.blankLineWanted(BlankLineWanted.YES);
@@ -1530,7 +1532,8 @@ public final class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       return false;
     }
     parts.addFirst(curr);
-    visitDotWithPrefix(ImmutableList.copyOf(parts), false, ImmutableList.of(parts.size() - 1));
+    visitDotWithPrefix(
+        ImmutableList.copyOf(parts), false, ImmutableList.of(parts.size() - 1), INDEPENDENT);
     return true;
   }
 
@@ -1553,18 +1556,22 @@ public final class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
           "withCause",
           "withStackTrace");
 
-  private static Optional<Long> handleStream(List<ExpressionTree> parts) {
-    return indexIn(
-        parts.stream(),
-        p ->
-            (p instanceof MethodInvocationTree)
-                && getMethodName((MethodInvocationTree) p).contentEquals("stream"));
+  private static List<Long> handleStream(List<ExpressionTree> parts) {
+    return indexes(
+            parts.stream(),
+            p -> {
+              if (!(p instanceof MethodInvocationTree)) {
+                return false;
+              }
+              Name name = getMethodName((MethodInvocationTree) p);
+              return Stream.of("stream", "parallelStream", "toBuilder")
+                  .anyMatch(name::contentEquals);
+            })
+        .collect(toList());
   }
 
-  private static <T> Optional<Long> indexIn(Stream<T> stream, Predicate<T> predicate) {
-    return Streams.mapWithIndex(stream, (x, i) -> predicate.apply(x) ? i : -1)
-        .filter(x -> x != -1)
-        .findFirst();
+  private static <T> Stream<Long> indexes(Stream<T> stream, Predicate<T> predicate) {
+    return Streams.mapWithIndex(stream, (x, i) -> predicate.apply(x) ? i : -1).filter(x -> x != -1);
   }
 
   @Override
@@ -2687,10 +2694,11 @@ public final class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       }
     }
 
-    handleStream(items).ifPresent(x -> prefixes.add(x.intValue()));
-
+    List<Long> streamPrefixes = handleStream(items);
+    streamPrefixes.forEach(x -> prefixes.add(x.intValue()));
     if (!prefixes.isEmpty()) {
-      visitDotWithPrefix(items, needDot, prefixes);
+      visitDotWithPrefix(
+          items, needDot, prefixes, streamPrefixes.isEmpty() ? INDEPENDENT : UNIFIED);
     } else {
       visitRegularDot(items, needDot);
     }
@@ -2786,7 +2794,10 @@ public final class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
    *     a syntactic unit
    */
   private void visitDotWithPrefix(
-      List<ExpressionTree> items, boolean needDot, Collection<Integer> prefixes) {
+      List<ExpressionTree> items,
+      boolean needDot,
+      Collection<Integer> prefixes,
+      FillMode prefixFillMode) {
     // Are there method invocations or field accesses after the prefix?
     boolean trailingDereferences = !prefixes.isEmpty() && getLast(prefixes) < items.size() - 1;
 
@@ -2802,7 +2813,7 @@ public final class JavaInputAstVisitor extends TreePathScanner<Void, Void> {
       if (needDot) {
         FillMode fillMode;
         if (!unconsumedPrefixes.isEmpty() && i <= unconsumedPrefixes.peekFirst()) {
-          fillMode = FillMode.INDEPENDENT;
+          fillMode = prefixFillMode;
         } else {
           fillMode = FillMode.UNIFIED;
         }
